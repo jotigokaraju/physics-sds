@@ -16,7 +16,7 @@ class Physics {
     this.rhoWater = 1000; // Density of water (kg/m³), used to calculate drag and lift forces.
     this.tiltAngle = 20; // Tilt angle the rock maintains during its movement (degrees)
 
-    this.A = area; // Cross-sectional area of the object (m²)
+    this.A = 0.3*area; // Cross-sectional area of the object (m²) and remember only 30% interacts
     this.m = mass; // Mass of the rock (kg)
     this.angleAttack = angle; // Angle of attack for the rock's movement (degrees)
 
