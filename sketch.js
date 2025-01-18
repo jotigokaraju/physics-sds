@@ -2,7 +2,7 @@
 // Commits will be made after the due date
 // This is because I am trying to deploy my library online and make it public, so some minor changes will be neccessary. 
 
-
+//Area is given in m^2, mass in kg, velocity in m/s, angle from horizontal, size in m, height in m
 // Physics class models the behavior of an object (rock) interacting with forces like gravity, lift, drag, and water resistance
 class Physics {
 
@@ -88,10 +88,10 @@ class Physics {
     return this.m * this.g;
   }
 
-  // Placeholder method for max depth (distance rock travels into the water).
+  // Max depth (distance rock travels into the water).
   maxDepth() {
     let C = this.Cl * Math.cos(this.degToRad(this.tiltAngle)) - this.Cd * Math.sin(this.degToRad(this.tiltAngle));
-    let w0 = (C * this.rhoWater * this.velocity.x * this.velocity.x * this.size) / (2 * this.m * Math.sin(this.degToRad(this.tiltAngle)));
+    let w0 = Math.sqrt((C * this.rhoWater * this.velocity.x * this.velocity.x * this.velocity.x * this.size) / (2 * this.m * Math.sin(this.degToRad(this.tiltAngle))));
     let answer = (this.g / w0) * (1 + Math.sqrt(1 + ((this.velocity.y * w0 / this.g) ** 2)));
     this.d = answer;
   }
@@ -109,7 +109,8 @@ class Physics {
     // Calculate net horizontal force (lift and drag forces contribute).
     let netForce = Math.sin(this.degToRad(20)) * this.liftForce() + Math.sin(this.degToRad(70)) * this.dragForce();
     // Return the horizontal velocity after collision using kinematic equation.
-    return Math.sqrt(this.velocity.x * this.velocity.x + ((-1 * netForce) / (2 * this.m)) * this.d);
+    // We subtract because force is opposite direction. 
+    return Math.sqrt(this.velocity.x * this.velocity.x + ((-1 * 2 * netForce) / (this.m)) * this.d * Math.tan(Math.degtoRad(Math.atan(this.velocity.x/this.velocity.y)));
   }
 
   // Method to check if the rock can "skip" on the water based on forces.
@@ -126,8 +127,8 @@ class Physics {
     console.log(Vx);
     
     // Check if all conditions for a successful skip are met:
-    // Lift force must be positive, vertical velocity (Vz) and horizontal velocity (Vx) must be positive.
-    if (netForce > 0 && Vz > 0 && Vx > 0) {
+    // Lift force must be positive and horizontal velocity (Vx) must be positive.
+    if (netForce > 0 && Vx > 0) {
       // Update the rock's velocity components based on post-collision velocities.
       this.velocity.x = Vx;
       this.velocity.y = Vz; 
